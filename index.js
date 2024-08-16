@@ -63,12 +63,12 @@ async function run() {
 
     const userCollection = client.db('Item-Hub').collection('users');
     const productCollection = client.db('Item-Hub').collection('products');
-    
+
 
 
     app.post('/jwt', async (req, res) => {
       const user = req.body;
-    //   console.log(user)
+      //   console.log(user)
       const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '8h' });
       res.send({ token })
     })
@@ -82,9 +82,9 @@ async function run() {
       const findUser = await userCollection.findOne(query);
       if (findUser) {
         const option = {
-            $set : {
-                ...user
-            }
+          $set: {
+            ...user
+          }
         }
         await userCollection.updateOne(query, option);
         return;
@@ -108,20 +108,30 @@ async function run() {
       res.send(result);
     })
 
-    app.get('/products', async(req, res) => {
-      const {page = 1, limit=10, search, sorting} = req.query;
+    app.get('/products', async (req, res) => {
+      const { page = 1, limit = 10, search, sorting } = req.query;
       // const query = {};
       // console.log(sorting);
       const skip = (page - 1) * limit;
       const query = {};
       let option = {};
-      if(search) {
+      if (search) {
         query.name = new RegExp(search, 'i');
       }
-      if(sorting) {
-        option = {
-          sort : {
-            price : sorting == 'low' ? 1 : -1
+      if (sorting) {
+        if (sorting == 'newest') {
+          option = {
+            sort: {
+              'index': -1,
+              
+            }
+          }
+        }
+        else {
+          option = {
+            sort: {
+              price: sorting == 'low' ? 1 : -1
+            }
           }
         }
       }
@@ -129,10 +139,10 @@ async function run() {
       res.send(products);
     })
 
-    app.get('/docCount', async(req, res) => {
-      const {search} = req.query;
+    app.get('/docCount', async (req, res) => {
+      const { search } = req.query;
       const query = {};
-      if(search) {
+      if (search) {
         query.name = new RegExp(search, 'i');
       }
       const countDoc = await productCollection.find(query).toArray();
@@ -140,10 +150,10 @@ async function run() {
       res.send(countDoc);
     })
 
-    
 
 
-    
+
+
 
     //get-user-info
     app.get('/get-user-info/:email', verifyToken, async (req, res) => {
@@ -152,7 +162,7 @@ async function run() {
       res.send(result)
     })
 
-    
+
 
 
 
