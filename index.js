@@ -109,16 +109,25 @@ async function run() {
     })
 
     app.get('/products', async(req, res) => {
-      const {page = 1, limit=10} = req.query;
-      console.log(page, limit);
+      const {page = 1, limit=10, search} = req.query;
+      // const query = {};
+      // console.log(page, limit, search);
       const skip = (page - 1) * limit;
       const query = {};
-      const products = await productCollection.find().skip(Number(skip)).limit(Number(limit)).toArray();
+      if(search) {
+        query.name = new RegExp(search, 'i');
+      }
+      const products = await productCollection.find(query).skip(Number(skip)).limit(Number(limit)).toArray();
       res.send(products);
     })
 
     app.get('/docCount', async(req, res) => {
-      const countDoc = await productCollection.find().toArray();
+      const {search} = req.query;
+      const query = {};
+      if(search) {
+        query.name = new RegExp(search, 'i');
+      }
+      const countDoc = await productCollection.find(query).toArray();
       // console.log(countDoc)
       res.send(countDoc);
     })
