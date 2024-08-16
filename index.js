@@ -109,15 +109,23 @@ async function run() {
     })
 
     app.get('/products', async(req, res) => {
-      const {page = 1, limit=10, search} = req.query;
+      const {page = 1, limit=10, search, sorting} = req.query;
       // const query = {};
-      // console.log(page, limit, search);
+      // console.log(sorting);
       const skip = (page - 1) * limit;
       const query = {};
+      let option = {};
       if(search) {
         query.name = new RegExp(search, 'i');
       }
-      const products = await productCollection.find(query).skip(Number(skip)).limit(Number(limit)).toArray();
+      if(sorting) {
+        option = {
+          sort : {
+            price : sorting == 'low' ? 1 : -1
+          }
+        }
+      }
+      const products = await productCollection.find(query, option).skip(Number(skip)).limit(Number(limit)).toArray();
       res.send(products);
     })
 
