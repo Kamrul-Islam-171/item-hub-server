@@ -62,6 +62,7 @@ async function run() {
     // Send a ping to confirm a successful connection
 
     const userCollection = client.db('Item-Hub').collection('users');
+    const productCollection = client.db('Item-Hub').collection('products');
     
 
 
@@ -105,6 +106,11 @@ async function run() {
       }
       const result = await userCollection.updateOne(query, doc);
       res.send(result);
+    })
+
+    app.get('/products', async(req, res) => {
+      const products = await productCollection.find().toArray();
+      res.send(products);
     })
 
     
