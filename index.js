@@ -77,7 +77,7 @@ async function run() {
 
     app.put('/user', async (req, res) => {
       const user = req.body;
-      console.log(user);
+      // console.log(user);
       const query = { email: user?.email };
       const findUser = await userCollection.findOne(query);
       if (findUser) {
@@ -109,8 +109,18 @@ async function run() {
     })
 
     app.get('/products', async(req, res) => {
-      const products = await productCollection.find().toArray();
+      const {page = 1, limit=10} = req.query;
+      console.log(page, limit);
+      const skip = (page - 1) * limit;
+      const query = {};
+      const products = await productCollection.find().skip(Number(skip)).limit(Number(limit)).toArray();
       res.send(products);
+    })
+
+    app.get('/docCount', async(req, res) => {
+      const countDoc = await productCollection.find().toArray();
+      // console.log(countDoc)
+      res.send(countDoc);
     })
 
     
