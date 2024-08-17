@@ -109,9 +109,9 @@ async function run() {
     })
 
     app.get('/products', async (req, res) => {
-      const { page = 1, limit = 10, search, sorting, brand } = req.query;
+      const { page = 1, limit = 10, search, sorting, brand, category } = req.query;
       // const query = {};
-      console.log(brand);
+      console.log('from original  = ', category);
       const skip = (page - 1) * limit;
       const query = {};
       let option = {};
@@ -120,6 +120,9 @@ async function run() {
       }
       if(brand) {
         query.brand = new RegExp(brand, 'i');
+      }
+      if(category) {
+        query.category = new RegExp(category, 'i');
       }
       if (sorting) {
         if (sorting == 'newest') {
@@ -143,14 +146,17 @@ async function run() {
     })
 
     app.get('/docCount', async (req, res) => {
-      const { search, brand } = req.query;
-      console.log(brand)
+      const { search, brand, category } = req.query;
+      console.log(category)
       const query = {};
       if (search) {
         query.name = new RegExp(search, 'i');
       }
       if(brand) {
         query.brand = new RegExp(brand, 'i');
+      }
+      if(category) {
+        query.category = new RegExp(category, 'i');
       }
       const countDoc = await productCollection.find(query).toArray();
       // console.log(countDoc)
