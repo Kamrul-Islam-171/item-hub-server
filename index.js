@@ -126,13 +126,13 @@ async function run() {
       if (category) {
         query.category = new RegExp(category, 'i');
       }
-      // query.price = {$gte : min, $lte : max};
+      
       query.price = {};
       if (min) {
-        query.price.$gte = Number(min); // Minimum price filter
+        query.price.$gte = Number(min); 
       }
       if (max) {
-        query.price.$lte = Number(max); // Maximum price filter
+        query.price.$lte = Number(max); 
       }
       if (sorting) {
         if (sorting == 'newest') {
@@ -172,10 +172,10 @@ async function run() {
       }
       query.price = {};
       if (min) {
-        query.price.$gte = Number(min); // Minimum price filter
+        query.price.$gte = Number(min);
       }
       if (max) {
-        query.price.$lte = Number(max); // Maximum price filter
+        query.price.$lte = Number(max); 
       }
       const countDoc = await productCollection.find(query).toArray();
       // console.log(countDoc)
