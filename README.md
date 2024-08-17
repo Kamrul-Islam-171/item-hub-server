@@ -15,7 +15,7 @@ Ensure you have the following installed on your system:
 
 1. **Clone the Repository**:
    ```bash
-   cd DiverseDeal-Server
+   cd ItemHub-Server
    ```
 
 2. **Install Dependencies**:
