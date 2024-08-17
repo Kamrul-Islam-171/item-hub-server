@@ -109,27 +109,37 @@ async function run() {
     })
 
     app.get('/products', async (req, res) => {
-      const { page = 1, limit = 10, search, sorting, brand, category } = req.query;
+      let { page = 1, limit = 10, search, sorting, brand, category, min, max } = req.query;
       // const query = {};
-      console.log('from original  = ', category);
+      min = parseInt(min);
+      max = parseInt(max);
+      // console.log('from original  = ', min, max);
       const skip = (page - 1) * limit;
       const query = {};
       let option = {};
       if (search) {
         query.name = new RegExp(search, 'i');
       }
-      if(brand) {
+      if (brand) {
         query.brand = new RegExp(brand, 'i');
       }
-      if(category) {
+      if (category) {
         query.category = new RegExp(category, 'i');
+      }
+      // query.price = {$gte : min, $lte : max};
+      query.price = {};
+      if (min) {
+        query.price.$gte = Number(min); // Minimum price filter
+      }
+      if (max) {
+        query.price.$lte = Number(max); // Maximum price filter
       }
       if (sorting) {
         if (sorting == 'newest') {
           option = {
             sort: {
               'index': -1,
-              
+
             }
           }
         }
@@ -146,17 +156,26 @@ async function run() {
     })
 
     app.get('/docCount', async (req, res) => {
-      const { search, brand, category } = req.query;
-      console.log(category)
+      let { search, brand, category, min, max } = req.query;
+      // console.log(min, max);
+      min = parseInt(min);
+      max = parseInt(max);
       const query = {};
       if (search) {
         query.name = new RegExp(search, 'i');
       }
-      if(brand) {
+      if (brand) {
         query.brand = new RegExp(brand, 'i');
       }
-      if(category) {
+      if (category) {
         query.category = new RegExp(category, 'i');
+      }
+      query.price = {};
+      if (min) {
+        query.price.$gte = Number(min); // Minimum price filter
+      }
+      if (max) {
+        query.price.$lte = Number(max); // Maximum price filter
       }
       const countDoc = await productCollection.find(query).toArray();
       // console.log(countDoc)
