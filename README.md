@@ -1,7 +1,7 @@
 # ItemHub
 
 
-This repository contains the server-side code for the DiverseDeal e-commerce website, focusing on handling API requests, user authentication, and database operations.
+This repository contains the server-side code for the ItemHub e-commerce website, focusing on handling API requests, user authentication, and database operations.
 
 ## Server Deployment Steps
 
